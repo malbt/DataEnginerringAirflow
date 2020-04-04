@@ -3,7 +3,11 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.dates import days_ago
+
+import pandas as pd
 import sqlalchemy
+from sqlalchemy import Table, Column, Integer, String, ROWS,
+from airflow.hooks.mysql_hook import MySqlHook
 
 default_args = {
     'owner': 'airflow',
@@ -42,3 +46,11 @@ t1 = PythonOperator(
     python_callable=create_engine,
     dag=dag,
 )
+def load_data():
+    query_load_data_infile = 'LOAD DATA INFILE "/Users/mtessema/Desktop/PY/TSLA.csv"' \
+                             'INTO TABLE stock' \
+                             'FIELDS TERMINATED BY ', ' ' \
+                             'ENCLOSED BY ["]'\
+                             'LINES TERMINATED BY [\n]' \
+                             'IGNORE 1 ROWS;'
+    return query_load_data_infile
