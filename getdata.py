@@ -40,7 +40,7 @@ def create_engine():
     return mysql_engine
 
 
-t1 = PythonOperator(
+create_engine = PythonOperator(
     task_id='create_mysql_engine',
     provide_context=True,
     python_callable=create_engine,
@@ -54,3 +54,15 @@ def load_data():
                              'LINES TERMINATED BY [\n]' \
                              'IGNORE 1 ROWS;'
     return query_load_data_infile
+
+load_data= PythonOperator(
+        task_id='load_data',
+        provide_context=True,
+        python_callable=load_data,
+        dag=dag,
+)
+"""
+tasks
+get_data
+create_engine >> load_data
+"""
