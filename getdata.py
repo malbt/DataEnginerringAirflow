@@ -73,6 +73,9 @@ i am creating separate dags for the tasks to figure out what works best
 i haven't been commiting my work because i had to create a separate .py file
 because i haven't been able to integrate the file's i wanted in to my airflow, 
 i did clone my project inside the airflow dir, but i had to move the file into the dag.
+port was right now am having config errors
+create_engine() got an unexpected keyword argument 'conf'
+
 
 """
 
