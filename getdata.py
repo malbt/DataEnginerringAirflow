@@ -75,7 +75,35 @@ because i haven't been able to integrate the file's i wanted in to my airflow,
 i did clone my project inside the airflow dir, but i had to move the file into the dag.
 port was right now am having config errors
 create_engine() got an unexpected keyword argument 'conf'
-
+i have tried d/t ways to import my data to mysql db, some dags run with no error but at the 
+end there is no data
 
 """
 
+def excel_sec():
+    book = xlrd.open_workbook("/Users/mtessema/Desktop/PY/TeslaSec(1).xlsx")
+    sheet = book.sheet_by_index(0)
+    database = pymysql.connect(host='localhost',
+                               user='root',
+                               password='zipcoder',
+                               db="airflow_db")
+    cursor = database.cursor()
+    query = "INSERT INTO sec (Date, Description, SEC) Values(%s, %s, %s)"
+    for r in range(1, sheet.nrows):
+        Date = sheet.cell(r, 2).value
+        Description = sheet.cell(r, 1).value
+        SEC = sheet.cell(r, 0).value
+
+        Values = (Date, Description, SEC)
+        cursor.execute(query, Values)
+    cursor.close()
+    database.commit()
+    database.close()
+
+
+t1 = PythonOperator(
+    task_id='excel_sec',
+    provide_context=False,
+    python_callable=excel_sec,
+    dag=dag,
+)
