@@ -38,7 +38,7 @@ def connect_pst():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
 
 # connect and create table
-def create_tbl():
+def create_tbl_sec():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -51,21 +51,13 @@ def create_tbl():
     conn.commit()
 
 # connect and insert
-def insert_csv():
+def insert_csv_sec():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     with open("/Users/mtessema/Desktop/PY/TeslaSec.csv", 'r') as f:
         next(f)  # Skip the header row.
         cur.copy_from(f, 'sec', sep=',')
         conn.commit()
-
-
-t1 = PythonOperator(
-    task_id='connect_pst',
-    provide_context=False,
-    python_callable=connect_pst,
-    dag=dag,
-)
 
 # created stock table
 def create_tbl_stock():
@@ -90,20 +82,43 @@ def insert_csv_Stock():
     cur = conn.cursor()
     with open("/Users/mtessema/Desktop/PY/TSLA.csv", 'r') as f:
         next(f)
-        cur.copy_from(f, 'sec', sep=',')
+        cur.copy_from(f, 'stock', sep=',')
         conn.commit()
 
+# change date type for both TABLE
+def clean_data_type_sec():
+    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    cur = conn.cursor()
+    cur.execute("""
+    alter table sec
+    alter column "date" type date using ("date"::text::date)""")
+    conn.commit()
+
+def clean_data_type_stock():
+    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    cur = conn.cursor()
+    cur.execute("""
+    alter table stock
+    alter column "date" type date using ("date"::text::date)""")
+    conn.commit()
+
+t1 = PythonOperator(
+    task_id='connect_pst',
+    provide_context=False,
+    python_callable=connect_pst,
+    dag=dag,
+)
 
 t2 = PythonOperator(
     task_id='create_tbl',
     provide_context=False,
-    python_callable=create_tbl,
+    python_callable=create_tbl_sec,
     dag=dag,
 )
 t3 = PythonOperator(
     task_id='insert_csv',
     provide_context=False,
-    python_callable=insert_csv,
+    python_callable=insert_csv_sec,
     dag=dag,
 )
 
@@ -119,5 +134,24 @@ t5 = PythonOperator(
     python_callable=insert_csv_Stock,
     dag=dag,
 )
-t2 >> t3
-t4 >> t5
+t6 = PythonOperator(
+    task_id='clean_data_type_sec',
+    provide_context=False,
+    python_callable=clean_data_type_sec,
+    dag=dag,
+)
+t7 = PythonOperator(
+    task_id='clean_data_type_stock',
+    provide_context=False,
+    python_callable=insert_csv_Stock,
+    dag=dag,
+)
+t1
+t2 >> t3 >> t6
+t4 >> t5 >>t7
+# merge the two table columns
+# SELECT *
+# FROM
+# sec, stock_dummy
+# WHERE
+# sec.date = stock_dummy.date;
