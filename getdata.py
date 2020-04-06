@@ -159,3 +159,15 @@ t4 >> t5 >> t7
 # sec, stock_dummy
 # WHERE
 # sec.date = stock_dummy.date;
+"""
+#### didn't work
+CREATE TABLE stock_sec
+AS
+SELECT open, high, low, close, adj_close, volume,date
+FROM stock_dummy
+UNION
+SELECT secformname, description, date
+FROM sec;
+"""
+# after this merge need to split the tables in to years
+
