@@ -114,7 +114,7 @@ t1 = PythonOperator(
 )
 
 t2 = PythonOperator(
-    task_id='create_tbl',
+    task_id='create_tbl_sec',
     provide_context=False,
     python_callable=create_tbl_sec,
     dag=dag,
