@@ -4,10 +4,6 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.dates import days_ago
 import psycopg2
-import pandas as pd
-import sqlalchemy
-from sqlalchemy import Table, Column, Integer, String, ROWS,
-from airflow.hooks.mysql_hook import MySqlHook
 
 default_args = {
     'owner': 'airflow',
@@ -33,9 +29,11 @@ get_data = BashOperator(
     dag=dag,
 )
 
+
 # test connection to postgres
 def connect_pst():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+
 
 # connect and create table
 def create_tbl_sec():
@@ -50,6 +48,7 @@ def create_tbl_sec():
     """)
     conn.commit()
 
+
 # connect and insert
 def insert_csv_sec():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
@@ -58,6 +57,7 @@ def insert_csv_sec():
         next(f)  # Skip the header row.
         cur.copy_from(f, 'sec', sep=',')
         conn.commit()
+
 
 # created stock table
 def create_tbl_stock():
@@ -76,6 +76,7 @@ def create_tbl_stock():
     """)
     conn.commit()
 
+
 # insert stock csv data
 def insert_csv_Stock():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
@@ -84,6 +85,7 @@ def insert_csv_Stock():
         next(f)
         cur.copy_from(f, 'stock', sep=',')
         conn.commit()
+
 
 # change date type for both TABLE
 def clean_data_type_sec():
@@ -94,6 +96,7 @@ def clean_data_type_sec():
     alter column "date" type date using ("date"::text::date)""")
     conn.commit()
 
+
 def clean_data_type_stock():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
@@ -101,6 +104,7 @@ def clean_data_type_stock():
     alter table stock
     alter column "date" type date using ("date"::text::date)""")
     conn.commit()
+
 
 t1 = PythonOperator(
     task_id='connect_pst',
@@ -148,7 +152,7 @@ t7 = PythonOperator(
 )
 t1
 t2 >> t3 >> t6
-t4 >> t5 >>t7
+t4 >> t5 >> t7
 # merge the two table columns
 # SELECT *
 # FROM
