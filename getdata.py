@@ -67,6 +67,33 @@ t1 = PythonOperator(
     dag=dag,
 )
 
+# created stock table
+def create_tbl_stock():
+    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE stock(
+        Date text,
+        Open text,
+        High text,
+        Low text,
+        Close text,
+        Adj_Close text,
+        Volume text
+    )
+    """)
+    conn.commit()
+
+# insert stock csv data
+def insert_csv_Stock():
+    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    cur = conn.cursor()
+    with open("/Users/mtessema/Desktop/PY/TSLA.csv", 'r') as f:
+        next(f)
+        cur.copy_from(f, 'sec', sep=',')
+        conn.commit()
+
+
 t2 = PythonOperator(
     task_id='create_tbl',
     provide_context=False,
@@ -80,5 +107,17 @@ t3 = PythonOperator(
     dag=dag,
 )
 
-
+t4 = PythonOperator(
+    task_id='create_tbl_stock',
+    provide_context=False,
+    python_callable=create_tbl_stock,
+    dag=dag,
+)
+t5 = PythonOperator(
+    task_id='insert_csv_Stock',
+    provide_context=False,
+    python_callable=insert_csv_Stock,
+    dag=dag,
+)
 t2 >> t3
+t4 >> t5
