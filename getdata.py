@@ -106,6 +106,18 @@ def clean_data_type_stock():
     conn.commit()
 
 
+# merge the two table columns
+def merge_table():
+    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    cur = conn.cursor()
+    cur.execute("""
+    create table stock_sec
+    as
+     SELECT open, high,low, close, adj_close, volume,stock.date, description,secformname 
+        FROM sec, stock;""")
+    conn.commit()
+
+
 t1 = PythonOperator(
     task_id='connect_pst',
     provide_context=False,
@@ -150,24 +162,18 @@ t7 = PythonOperator(
     python_callable=insert_csv_Stock,
     dag=dag,
 )
+t8 = PythonOperator(
+    task_id='create_tbl_stock_sec',
+    provide_context=False,
+    python_callable=merge_table,
+    dag=dag,
+)
+
 t1
 t2 >> t3 >> t6
 t4 >> t5 >> t7
-# merge the two table columns
-# SELECT *
-# FROM
-# sec, stock_dummy
-# WHERE
-# sec.date = stock_dummy.date;
-"""
-#### didn't work
-CREATE TABLE stock_sec
-AS
-SELECT open, high, low, close, adj_close, volume,date
-FROM stock_dummy
-UNION
-SELECT secformname, description, date
-FROM sec;
-"""
-# after this merge need to split the tables in to years
+t8.set_upstream(t6)
+t8.set_upstream(t7)
 
+
+# after this merge need to split the tables in to years
