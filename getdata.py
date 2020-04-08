@@ -114,7 +114,8 @@ def merge_table():
     create table stock_sec
     as
      SELECT open, high,low, close, adj_close, volume,stock.date, description,secformname 
-        FROM sec, stock;""")
+        FROM sec, stock
+        WHERE sec.date = stock.date;""")
     conn.commit()
 
 
