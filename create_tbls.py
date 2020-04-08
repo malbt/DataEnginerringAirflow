@@ -1,7 +1,7 @@
 from sqlalchemy_utils.types.pg_composite import psycopg2
 
 
-def create_table_from_merge():
+def create_table_from_merge1():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -13,7 +13,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge2():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -25,7 +25,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge3():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -37,7 +37,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge4():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -49,7 +49,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge5():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -61,7 +61,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge6():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -73,7 +73,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge7():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -85,7 +85,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge8():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -97,7 +97,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge9():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -109,7 +109,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge10():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
@@ -121,7 +121,7 @@ def create_table_from_merge():
     conn.commit()
 
 
-def create_table_from_merge():
+def create_table_from_merge11():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
     cur = conn.cursor()
     cur.execute("""
