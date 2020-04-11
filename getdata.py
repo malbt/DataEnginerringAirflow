@@ -17,11 +17,12 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id='stk_data',
+    dag_id='airflow_test',
     default_args=default_args,
-    description='Tesla stock data from API',
+    description='create and insert',
     schedule_interval=timedelta(days=1),
 )
+
 # get stock data
 get_data = BashOperator(
     task_id='get_kaggle_api',
@@ -35,11 +36,15 @@ def connect_pst():
     conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
 
 
-# connect and create table
+def connect_pst():
+    psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+
+
 def create_tbl_sec():
-    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     cur = conn.cursor()
     cur.execute("""
+        drop table if exists sec;
         CREATE TABLE sec(
         SECFormName text,
         Description text,
@@ -49,21 +54,20 @@ def create_tbl_sec():
     conn.commit()
 
 
-# connect and insert
 def insert_csv_sec():
-    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     cur = conn.cursor()
     with open("/Users/mtessema/Desktop/PY/TeslaSec.csv", 'r') as f:
-        next(f)  # Skip the header row.
+        next(f)
         cur.copy_from(f, 'sec', sep=',')
         conn.commit()
 
 
-# created stock table
 def create_tbl_stock():
-    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     cur = conn.cursor()
     cur.execute("""
+        drop table if exists stock;
         CREATE TABLE stock(
         Date text,
         Open text,
@@ -77,9 +81,8 @@ def create_tbl_stock():
     conn.commit()
 
 
-# insert stock csv data
 def insert_csv_Stock():
-    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     cur = conn.cursor()
     with open("/Users/mtessema/Desktop/PY/TSLA.csv", 'r') as f:
         next(f)
@@ -89,7 +92,7 @@ def insert_csv_Stock():
 
 # change date type for both TABLE
 def clean_data_type_sec():
-    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     cur = conn.cursor()
     cur.execute("""
     alter table sec
@@ -98,7 +101,7 @@ def clean_data_type_sec():
 
 
 def clean_data_type_stock():
-    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     cur = conn.cursor()
     cur.execute("""
     alter table stock
@@ -106,16 +109,31 @@ def clean_data_type_stock():
     conn.commit()
 
 
-# merge the two table columns
 def merge_table():
-    conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     cur = conn.cursor()
     cur.execute("""
+    drop table if exists stock_sec;
     create table stock_sec
     as
      SELECT open, high,low, close, adj_close, volume,stock.date, description,secformname 
         FROM sec, stock
         WHERE sec.date = stock.date;""")
+    conn.commit()
+
+
+def clean_merged_data():
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    cur = conn.cursor()
+    cur.execute("""
+    drop table if exists tesla;
+    create table tesla
+        as
+        select st.date, open,close,high, low,adj_close,volume, sec.secformname from  stock as st
+        full outer join sec 
+        on st.date = sec.date;
+
+    """)
     conn.commit()
 
 
@@ -169,12 +187,35 @@ t8 = PythonOperator(
     python_callable=merge_table,
     dag=dag,
 )
+t20 = PythonOperator(
+    task_id='clean_merged_data',
+    provide_context=False,
+    python_callable=clean_merged_data,
+    dag=dag,
+)
 
-t1
+# t1
 t2 >> t3 >> t6
 t4 >> t5 >> t7
 t8.set_upstream(t6)
 t8.set_upstream(t7)
-
-
+t20.set_upstream(t6)
+t20.set_upstream(t7)
+t9.set_upstream(t20)
+t10.set_upstream(t20)
+t11.set_upstream(t20)
+t12.set_upstream(t20)
+t13.set_upstream(t20)
+t14.set_upstream(t20)
+t15.set_upstream(t20)
+t16.set_upstream(t20)
+t17.set_upstream(t20)
+t18.set_upstream(t20)
+t19.set_upstream(t20)
 # after this merge need to split the tables in to years
+# was trying my connection for the backend db
+# import sqlalchemy
+#
+# engine = sqlalchemy.create_engine('postgresql+psycopg2://postgres:password@localhost:5432/airflow_backend')
+# for row in engine.execute('SELECT 1'):
+#     print(row)
