@@ -452,7 +452,6 @@ def chart_yr10():
     # fig.savefig('first-sec-2010-08-04--08-19.png')
 
 
-# aug 4 was the first sec -2010-08-04/ 08-19
 
 t23 = PythonOperator(
     task_id='chart_yr10',
