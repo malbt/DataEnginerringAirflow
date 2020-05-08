@@ -410,18 +410,6 @@ t19.set_upstream(t9)
 t20.set_upstream(t9)
 
 
-def create_engine_connection():
-    create_engine('postgresql://postgres:zipcoder@localhost/airflow_test')
-
-
-t21 = PythonOperator(
-    task_id='create_engine_connection',
-    provide_context=False,
-    python_callable=create_engine_connection,
-    dag=dag,
-)
-
-
 def create_chart_10_years():
     import plotly.graph_objects as go
     import pandas as pd
@@ -449,14 +437,11 @@ t22 = PythonOperator(
 def chart_yr10():
     import plotly.graph_objects as go
     import pandas as pd
-    # pandas.io.sql
-    # import sql
-    # dt10_df=sql.write_frame(df, 'st_y10, con, flavor='postgresql')
+
     conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     sql = "select  * from st_y10"
     dt10_df = pd.read_sql_query(sql, conn)
     conn = None
-    #dt10_df = pd.read_sql('select  * from st_y10', engine)
     fig = go.Figure(data=[go.Candlestick(x=dt10_df['date'],
                                          open=dt10_df['open'],
                                          high=dt10_df['high'],
@@ -467,7 +452,6 @@ def chart_yr10():
     # fig.savefig('first-sec-2010-08-04--08-19.png')
 
 
-# aug 4 was the first sec -2010-08-04/ 08-19
 
 t23 = PythonOperator(
     task_id='chart_yr10',
@@ -480,12 +464,14 @@ t23 = PythonOperator(
 def chart_yr11():
     import plotly.graph_objects as go
     import pandas as pd
-    dt10_df = pd.read_sql('select  * from st_y11', engine)
-    fig = go.Figure(data=[go.Candlestick(x=dt10_df['date'],
-                                         open=dt10_df['open'],
-                                         high=dt10_df['high'],
-                                         low=dt10_df['low'],
-                                         close=dt10_df['close'])])
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y11"
+    dt11_df = pd.read_sql_query(sql, conn)
+    fig = go.Figure(data=[go.Candlestick(x=dt11_df['date'],
+                                         open=dt11_df['open'],
+                                         high=dt11_df['high'],
+                                         low=dt11_df['low'],
+                                         close=dt11_df['close'])])
 
     fig.show()
     # fig.savefig('year-2011-chart.png')
@@ -502,7 +488,9 @@ t24 = PythonOperator(
 def chart_yr12():
     import plotly.graph_objects as go
     import pandas as pd
-    dt12_df = pd.read_sql('select  * from st_y12', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y12"
+    dt12_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt12_df['date'],
                                          open=dt12_df['open'],
                                          high=dt12_df['high'],
@@ -524,7 +512,9 @@ t25 = PythonOperator(
 def chart_yr13():
     import plotly.graph_objects as go
     import pandas as pd
-    dt13_df = pd.read_sql('select  * from st_y13', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y13"
+    dt13_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt13_df['date'],
                                          open=dt13_df['open'],
                                          high=dt13_df['high'],
@@ -545,8 +535,9 @@ t26 = PythonOperator(
 
 def chart_yr14():
     import plotly.graph_objects as go
-    import pandas as pd
-    dt14_df = pd.read_sql('select  * from st_y14', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y14"
+    dt14_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt14_df['date'],
                                          open=dt14_df['open'],
                                          high=dt14_df['high'],
@@ -568,7 +559,9 @@ t27 = PythonOperator(
 def chart_yr15():
     import plotly.graph_objects as go
     import pandas as pd
-    dt15_df = pd.read_sql('select  * from st_y15', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y15"
+    dt15_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt15_df['date'],
                                          open=dt15_df['open'],
                                          high=dt15_df['high'],
@@ -590,7 +583,9 @@ t28 = PythonOperator(
 def chart_yr16():
     import plotly.graph_objects as go
     import pandas as pd
-    dt16_df = pd.read_sql('select  * from st_y16', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y16"
+    dt16_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt16_df['date'],
                                          open=dt16_df['open'],
                                          high=dt16_df['high'],
@@ -612,7 +607,9 @@ t29 = PythonOperator(
 def chart_yr17():
     import plotly.graph_objects as go
     import pandas as pd
-    dt17_df = pd.read_sql('select  * from st_y17', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y17"
+    dt17_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt17_df['date'],
                                          open=dt17_df['open'],
                                          high=dt17_df['high'],
@@ -634,7 +631,9 @@ t30 = PythonOperator(
 def chart_yr18():
     import plotly.graph_objects as go
     import pandas as pd
-    dt18_df = pd.read_sql('select  * from st_y18', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y18"
+    dt18_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt18_df['date'],
                                          open=dt18_df['open'],
                                          high=dt18_df['high'],
@@ -656,7 +655,9 @@ t31 = PythonOperator(
 def chart_yr19():
     import plotly.graph_objects as go
     import pandas as pd
-    dt19_df = pd.read_sql('select  * from st_y19', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y19"
+    dt19_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt19_df['date'],
                                          open=dt19_df['open'],
                                          high=dt19_df['high'],
@@ -678,7 +679,9 @@ t32 = PythonOperator(
 def chart_yr20():
     import plotly.graph_objects as go
     import pandas as pd
-    dt20_df = pd.read_sql('select  * from st_y20', engine)
+    conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    sql = "select  * from st_y20"
+    dt20_df = pd.read_sql_query(sql, conn)
     fig = go.Figure(data=[go.Candlestick(x=dt20_df['date'],
                                          open=dt20_df['open'],
                                          high=dt20_df['high'],
@@ -696,38 +699,15 @@ t33 = PythonOperator(
     dag=dag,
 )
 
-t21
 t22.set_upstream(t2)
-
-#t23.set_upstream(t21)
 t23.set_upstream(t10)
-
 t24.set_upstream(t11)
-t24.set_upstream(t21)
-
-t25.set_upstream(t21)
 t25.set_upstream(t12)
-
-t26.set_upstream(t21)
 t26.set_upstream(t13)
-
-t27.set_upstream(t21)
 t27.set_upstream(t14)
-
-t28.set_upstream(t21)
 t28.set_upstream(t15)
-
-t29.set_upstream(t21)
 t29.set_upstream(t16)
-
-t30.set_upstream(t21)
 t30.set_upstream(t17)
-
-t31.set_upstream(t21)
 t31.set_upstream(t18)
-
-t32.set_upstream(t21)
 t32.set_upstream(t19)
-
-t33.set_upstream(t21)
 t33.set_upstream(t20)
