@@ -20,7 +20,7 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id='yahoo_data',
+    dag_id='yahoo_data_git',
     default_args=default_args,
     description='Tesla sec from yahoo',
     schedule_interval=timedelta(days=1),
@@ -452,7 +452,6 @@ def chart_yr10():
     # fig.savefig('first-sec-2010-08-04--08-19.png')
 
 
-
 t23 = PythonOperator(
     task_id='chart_yr10',
     provide_context=False,
@@ -535,6 +534,7 @@ t26 = PythonOperator(
 
 def chart_yr14():
     import plotly.graph_objects as go
+    import pandas as pd
     conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
     sql = "select  * from st_y14"
     dt14_df = pd.read_sql_query(sql, conn)
