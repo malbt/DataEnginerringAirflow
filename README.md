@@ -20,11 +20,11 @@ SEC Filings are formal documents that are submitted to the U.S. Securities and E
 companies are required to make regular SEC filings. Financial professionals and investors rely on SEC filings for investment <br>
 purposes. SEC Filings contain important financial data, disclosures, and events that impact the company.
 Because the data contained within SEC filings is sworn to accuracy or audited, it is a much more reliable source. But at <br>
-the same time unless they are a professional traders/investors most people don't really know about sec fillings and important <br>phrases that are needed to know to recognize red flags.<br>
+the same time unless they are a professional traders/investors most people don't really know about sec fillings and <br>important phrases that are needed to know to recognize red flags.<br>
 
 Based on my interest i created an **airflow pipeline**:<br>
-I picked one ticker(**TSLA/Tesla**) and took out 10 years stock price from yahoo finance and it's SEC filling from EDGAR, cleaned <br>
-and stored the data into postgres database, merged the tables in to one and then created tables for each year, created a <br>
-dataframe and a candle stick chart so that they can see when and where the fillings occurred how it impacted the price and <br>
-how long it stayed. 
+I picked one ticker(**TSLA/Tesla**) and took out 10 years stock price from yahoo finance and it's SEC filling from EDGAR,<br>
+cleaned and stored the data into postgres database, merged the tables in to one and then created tables for each year, <br>
+created a dataframe and a candlestick chart so that they can see when and where the fillings occurred how it impacted <br>
+the price and how long it stayed. 
 
