@@ -27,5 +27,11 @@ Based on my interest i created an **airflow pipeline**:<br>
 I picked one ticker(**TSLA/Tesla**) and took out 10 years stock price from yahoo finance and it's SEC filling from EDGAR,<br>
 cleaned and stored the data into postgres database, merged the tables in to one and then created tables for each year, <br>
 created a dataframe and a candlestick chart so that they can see when and where the fillings occurred how it impacted <br>
-the price and how long it stayed. 
+the price and how long it stayed. <br>
+
+
+Img :- <br>
+[pipeline](https://github.com/malbt/DataEnginerringAirflow/blob/master/Dags/Screen%20Shot.jpg.png) <br>
+[charts](https://github.com/malbt/DataEnginerringAirflow/blob/master/Dags/flow.jpg.png)
+
 
