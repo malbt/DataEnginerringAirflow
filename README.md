@@ -31,7 +31,8 @@ the price and how long it stayed. <br>
 
 
 Img :- <br>
-[pipeline](https://github.com/malbt/DataEnginerringAirflow/blob/master/Dags/Screen%20Shot.jpg.png) <br>
-[charts](https://github.com/malbt/DataEnginerringAirflow/blob/master/Dags/flow.jpg.png)
+[Pipeline](https://github.com/malbt/DataEnginerringAirflow/blob/master/Dags/flow.jpg.png)<br>
+[Charts](https://github.com/malbt/DataEnginerringAirflow/blob/master/Dags/Screen%20Shot.jpg.png) <br>
+
 
 
